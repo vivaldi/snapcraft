@@ -1,0 +1,126 @@
+name: vivaldi
+version: 6.7.3329.35-1
+summary: Vivaldi Browser - Feature-packed web browser
+# NOT SURE IF WE CAN USE HTML HERE
+description: |
+    The web browser for techies and people who need a browser that helps them get things done.
+    The user interface is fully customizable, including keyboard shortcuts, mouse gestures, and programmable macros.
+
+    NOTE: This package is maintained by but not yet officially endorsed or supported by Vivaldi Technologies.
+confinement: strict
+base: core24
+# TODO: license
+# TODO: publisher
+# TODO: linter problems
+# TODO: Test and fix:
+#   * ffmpeg related stuff
+#     - video playback
+#     - update-ffmpeg binary
+#     - browser startup download of the lib
+#   * filesystem handling (downloads, etc)
+#   * sandboxing
+#   * cups/printing
+#   * wayland/x11 - support both
+#   * secure-storage related stuff
+#     - handling of gnome-keyring
+
+apps:
+  vivaldi:
+    command: bin/vivaldi.launcher
+    desktop: usr/share/applications/vivaldi.desktop
+    plugs:
+      - browser-sandbox
+      - camera
+      - cups-control
+      - desktop
+      - gsettings
+      - home
+      - mount-observe
+      - network
+      - network-manager
+      - opengl
+      - password-manager-service
+      - pulseaudio
+      - removable-media
+      - screen-inhibit-control
+      - unity7 # required for xdg-open to work
+      - upower-observe
+      - wayland
+      - x11
+
+plugs:
+  browser-sandbox:
+    interface: browser-support
+    allow-sandbox: true
+
+parts:
+  vivaldi:
+    plugin: nil
+    after:
+      - launcher
+    source: https://downloads.vivaldi.com/stable/vivaldi-stable_6.7.3329.35-1_amd64.deb
+    source-checksum: sha512/aac408ba134dd97c691fc3382c24548ead6de1fe92541078c709eed3fc4b2d11b380eae50085119402a7c11388b42c7b5abee4fc4fdeda5fe6e408543527241a
+    build-packages:
+      - coreutils # for install command
+      - sed
+    stage-packages:
+      - libnss3
+      - libsecret-1-0
+      - pulseaudio
+      - libatk1.0-0
+      - libatspi2.0-0
+      - libcairo2
+      - libcups2
+      - libcurl3-gnutls
+      - libdbus-1-3
+      - libdrm2
+      - libexpat1
+      - libgbm1
+      - libglib2.0-0
+      - libgtk-3-0
+      - libnspr4
+      - libnss3
+      - libpango-1.0-0
+      - libu2f-udev
+      - libvulkan1
+      - libx11-6
+      - libxcb1
+      - libxcomposite1
+      - libxdamage1
+      - libxext6
+      - libxfixes3
+      - libxkbcommon0
+      - libxrandr2
+      - wget
+      - xdg-utils
+    override-build: |
+      set -ex +u
+      # Otherwise who really can claim to know what they contain?
+      printf '%s\n'               \
+        "$CRAFT_STAGE"            \
+        "$CRAFT_PART_INSTALL"     \
+        "$CRAFT_PART_BUILD"       \
+        "$CRAFT_PART_SRC"         \
+        "$CRAFT_PART_SRC_WORK"    \
+        "$CRAFT_PART_BUILD_WORK"  \
+        "$CRAFT_PROJECT_DIR"      \
+        "$CRAFT_PRIME"
+      set -u
+      # install files from vivaldi opt
+      sed -i 's,HOME/.local/lib/vivaldi,XDG_DATA_HOME/vivaldi-extra-libs,' $CRAFT_PART_BUILD/opt/vivaldi/update-ffmpeg
+      mkdir -p $CRAFT_PART_INSTALL/opt
+      cp -r $CRAFT_PART_BUILD/opt/vivaldi $CRAFT_PART_INSTALL/opt
+      mkdir -p $CRAFT_PART_INSTALL/usr/share/applications/
+      install $CRAFT_PART_BUILD/usr/share/applications/vivaldi-stable.desktop $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop
+      for size in 16 24 32 48 64 128 256; do
+          mkdir -p $CRAFT_PART_INSTALL/usr/share/icons/hicolor/${size}x${size}/
+          install -Dm 644 $CRAFT_PART_BUILD/opt/vivaldi/product_logo_${size}.png $CRAFT_PART_INSTALL/usr/share/icons/hicolor/${size}x${size}/apps/vivaldi.png
+      done
+      # fix the rights on the sandbox file
+      chmod 4755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
+
+  launcher:
+    plugin: dump
+    source: launcher
+    organize:
+      '*': bin/
