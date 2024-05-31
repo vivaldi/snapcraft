@@ -23,35 +23,50 @@ base: core24
 #   * wayland/x11 - support both
 #   * secure-storage related stuff
 #     - handling of gnome-keyring
+#   * policy patch? https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/tree/build/chromium-patches/snap-policies-path.patch
+# dbus message errors from apparmor (plug dbus interface?)
+# shm interface - according to internet, only files with prefix /dev/shm/.snap.SNAPNAME.* are supported
+
+# args needed for this to start a window (TODO: fix the need for these):
+# --no-sandbox --disable-dev-shm-usage
 
 apps:
   vivaldi:
     command: bin/vivaldi.launcher
     desktop: usr/share/applications/vivaldi.desktop
     plugs:
-      - browser-sandbox
+      - network-bind
+      - audio-playback
+      - audio-record
+      - bluez # for Web Bluetooth (https://launchpad.net/bugs/1887201)
       - camera
-      - cups-control
-      - desktop
-      - gsettings
+      - cups
+      - hardware-observe
       - home
+      - joystick
       - mount-observe
       - network
       - network-manager
-      - opengl
       - password-manager-service
-      - pulseaudio
+      - raw-usb # for WebUSB (https://launchpad.net/bugs/1780678)
       - removable-media
       - screen-inhibit-control
+      - system-packages-doc
+      - u2f-devices
       - unity7 # required for xdg-open to work
       - upower-observe
-      - wayland
-      - x11
+      - shared-memory
 
 plugs:
   browser-sandbox:
     interface: browser-support
     allow-sandbox: true
+  vivaldi-config:
+    interface: personal-files
+    read: [$HOME/.config/vivaldi]
+  dot-local-share-applications:
+    interface: personal-files
+    write: [$HOME/.local/share/applications]
 
 parts:
   vivaldi:
