@@ -8,7 +8,7 @@ description: |
 
     NOTE: This package is maintained by but not yet officially endorsed or supported by Vivaldi Technologies.
 confinement: strict
-base: core24
+base: core22
 # TODO: license
 # TODO: publisher
 # TODO: linter problems
@@ -28,11 +28,21 @@ base: core24
 #   * Failed to adjust OOM
 #   * usb midi
 #   * XDG open handling
+#   * Sound
+#   * DCONF
+
+# ICON!
+
 # dbus message errors from apparmor (plug dbus interface?)
 # shm interface - according to internet, only files with prefix /dev/shm/.snap.SNAPNAME.* are supported
+# ANGLE is not starting properly
 
 # args needed for this to start a window (TODO: fix the need for these):
 # --no-sandbox --disable-dev-shm-usage
+
+# For sound, I am able to get it to work only after manually connecting vivaldi:alsa
+# because alsa plug is not autoconnected - https://snapcraft.io/docs/alsa-interface
+# snap connect vivaldi:alsa
 
 apps:
   vivaldi:
@@ -42,6 +52,7 @@ apps:
       - network-bind
       - audio-playback
       - audio-record
+      - alsa
       - bluez # for Web Bluetooth (https://launchpad.net/bugs/1887201)
       - camera
       - cups
@@ -63,6 +74,7 @@ apps:
       - x11
       - upower-observe
       - shared-memory
+      - opengl
 
 plugs:
   browser-sandbox:
@@ -74,6 +86,14 @@ plugs:
   dot-local-share-applications:
     interface: personal-files
     write: [$HOME/.local/share/applications]
+  pulseaudio:
+    interface: pulseaudio
+
+layout:
+  /usr/share/alsa:
+    bind: $SNAP/usr/share/alsa
+  /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib:
+    bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib
 
 parts:
   vivaldi:
@@ -86,9 +106,7 @@ parts:
       - coreutils # for install command
       - sed
     stage-packages:
-      - libnss3
       - libsecret-1-0
-      - pulseaudio
       - libatk1.0-0
       - libatspi2.0-0
       - libcairo2
@@ -115,7 +133,11 @@ parts:
       - libxrandr2
       - wget
       - xdg-utils
-      # libGL.so.1 was missing
+      # Audio related:
+      - libpulse0
+      - libasound2
+      - libasound2-plugins
+      # OpenGL:
       - libgl1
     override-build: |
       set -ex +u
