@@ -5,9 +5,10 @@
 # fall back to the basic store (no encryption) if it fails to talk to the
 # default password store for the current desktop environment.
 # Ref: https://launchpad.net/bugs/1763829
-PASSWORD_STORE= # an empty string means detect the store based on the current DE (os_crypt::SelectBackend())
-dbus-send --session --dest=org.freedesktop.secrets /org/freedesktop/secrets --print-reply org.freedesktop.DBus.Properties.GetAll string:'org.freedesktop.Secret.Service' >/dev/null 2>&1
-if [ "$?" -ne "0" ]; then
+
+if snapctl is-connected password-manager-service; then
+  PASSWORD_STORE= # an empty string means detect the store based on the current DE (os_crypt::SelectBackend())
+else
   PASSWORD_STORE=basic
 fi
 

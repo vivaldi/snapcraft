@@ -24,6 +24,10 @@ base: core24
 #   * secure-storage related stuff
 #     - handling of gnome-keyring
 #   * policy patch? https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/tree/build/chromium-patches/snap-policies-path.patch
+#   * search engines
+#   * Failed to adjust OOM
+#   * usb midi
+#   * XDG open handling
 # dbus message errors from apparmor (plug dbus interface?)
 # shm interface - according to internet, only files with prefix /dev/shm/.snap.SNAPNAME.* are supported
 
@@ -53,7 +57,10 @@ apps:
       - screen-inhibit-control
       - system-packages-doc
       - u2f-devices
-      - unity7 # required for xdg-open to work
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
       - upower-observe
       - shared-memory
 
@@ -108,6 +115,8 @@ parts:
       - libxrandr2
       - wget
       - xdg-utils
+      # libGL.so.1 was missing
+      - libgl1
     override-build: |
       set -ex +u
       # Otherwise who really can claim to know what they contain?
