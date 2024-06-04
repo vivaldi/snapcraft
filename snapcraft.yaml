@@ -7,29 +7,27 @@ description: |
 
     NOTE: This package is maintained by but not yet officially endorsed or supported by Vivaldi Technologies.
 confinement: strict
+license: Proprietary
+type: app
+website: https://vivaldi.com
 grade: stable
 base: core22
+icon: vivaldi_icon.png
+compression: lzo
+adopt-info: vivaldi-metadata
 
 # TODO: source-code
-# TODO: compression: lzo
 
-# TODO: license
-# TODO: publisher
 # TODO: linter problems
+
 # TODO: Test and fix:
-#   * ffmpeg related stuff
-#     - video playback
-#     - update-ffmpeg binary
-#     - browser startup download of the lib
 #   * filesystem handling (downloads, etc)
-#   * sandboxing
 #   * cups/printing
 #   * wayland/x11 - support both
 #   * secure-storage related stuff
 #     - handling of gnome-keyring
 #   * policy patch? https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/tree/build/chromium-patches/snap-policies-path.patch
 #   * search engines
-#   * Failed to adjust OOM
 #   * usb midi
 #   * XDG open handling
 #   * Sound
@@ -39,6 +37,7 @@ apps:
   vivaldi:
     extensions: [gnome]
     command: bin/vivaldi.launcher
+    common-id: com.vivaldi.Vivaldi
     desktop: usr/share/applications/vivaldi.desktop
     plugs:
       - network-bind
@@ -158,3 +157,8 @@ parts:
     source: launcher
     organize:
       '*': bin/
+
+  vivaldi-metadata:
+    plugin: dump
+    source: https://github.com/flathub/com.vivaldi.Vivaldi.git
+    parse-info: [com.vivaldi.Vivaldi.metainfo.xml]
