@@ -12,4 +12,4 @@ else
   PASSWORD_STORE=basic
 fi
 
-exec "$SNAP/opt/vivaldi/vivaldi-bin" --no-default-browser-check --no-first-run --password-store=$PASSWORD_STORE --ppapi-flash-path=$FLASHSO "$@"
+exec "$SNAP/opt/vivaldi/vivaldi-bin" --no-default-browser-check --no-first-run --password-store=$PASSWORD_STORE "$@"

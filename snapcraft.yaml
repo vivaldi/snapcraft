@@ -8,6 +8,7 @@ description: |
 
     NOTE: This package is maintained by but not yet officially endorsed or supported by Vivaldi Technologies.
 confinement: strict
+grade: stable
 base: core22
 # TODO: license
 # TODO: publisher
@@ -46,13 +47,13 @@ base: core22
 
 apps:
   vivaldi:
+    extensions: [gnome]
     command: bin/vivaldi.launcher
     desktop: usr/share/applications/vivaldi.desktop
     plugs:
       - network-bind
       - audio-playback
       - audio-record
-      - alsa
       - bluez # for Web Bluetooth (https://launchpad.net/bugs/1887201)
       - camera
       - cups
@@ -73,9 +74,8 @@ apps:
       - wayland
       - x11
       - upower-observe
-      - shared-memory
       - opengl
-
+      - shmem
 plugs:
   browser-sandbox:
     interface: browser-support
@@ -86,14 +86,9 @@ plugs:
   dot-local-share-applications:
     interface: personal-files
     write: [$HOME/.local/share/applications]
-  pulseaudio:
-    interface: pulseaudio
-
-layout:
-  /usr/share/alsa:
-    bind: $SNAP/usr/share/alsa
-  /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib:
-    bind: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib
+  shmem:
+    interface: shared-memory
+    private: true
 
 parts:
   vivaldi:
@@ -133,11 +128,7 @@ parts:
       - libxrandr2
       - wget
       - xdg-utils
-      # Audio related:
-      - libpulse0
       - libasound2
-      - libasound2-plugins
-      # OpenGL:
       - libgl1
     override-build: |
       set -ex +u
