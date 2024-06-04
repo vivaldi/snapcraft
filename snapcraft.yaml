@@ -131,18 +131,6 @@ parts:
       - libasound2
       - libgl1
     override-build: |
-      set -ex +u
-      # Otherwise who really can claim to know what they contain?
-      printf '%s\n'               \
-        "$CRAFT_STAGE"            \
-        "$CRAFT_PART_INSTALL"     \
-        "$CRAFT_PART_BUILD"       \
-        "$CRAFT_PART_SRC"         \
-        "$CRAFT_PART_SRC_WORK"    \
-        "$CRAFT_PART_BUILD_WORK"  \
-        "$CRAFT_PROJECT_DIR"      \
-        "$CRAFT_PRIME"
-      set -u
       # install files from vivaldi opt
       sed -i 's,HOME/.local/lib/vivaldi,XDG_DATA_HOME/vivaldi-extra-libs,' $CRAFT_PART_BUILD/opt/vivaldi/update-ffmpeg
       mkdir -p $CRAFT_PART_INSTALL/opt
@@ -155,6 +143,8 @@ parts:
       done
       # fix the rights on the sandbox file
       chmod 4755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
+      # icon path fixup (is 128x128 enough for hidpi?)
+      sed -i 's|Icon=vivaldi|Icon=usr/share/icons/hicolor/128x128/apps/vivaldi.png|' $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop
 
   launcher:
     plugin: dump
