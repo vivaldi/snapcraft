@@ -32,18 +32,9 @@ base: core22
 #   * Sound
 #   * DCONF
 
-# ICON!
-
-# dbus message errors from apparmor (plug dbus interface?)
-# shm interface - according to internet, only files with prefix /dev/shm/.snap.SNAPNAME.* are supported
-# ANGLE is not starting properly
-
 # args needed for this to start a window (TODO: fix the need for these):
-# --no-sandbox --disable-dev-shm-usage
-
-# For sound, I am able to get it to work only after manually connecting vivaldi:alsa
-# because alsa plug is not autoconnected - https://snapcraft.io/docs/alsa-interface
-# snap connect vivaldi:alsa
+# --no-sandbox
+# this is specified in launcher but we need to fix the sandboxing
 
 apps:
   vivaldi:
@@ -76,6 +67,9 @@ apps:
       - upower-observe
       - opengl
       - shmem
+    slots:
+      - dbus-daemon
+
 plugs:
   browser-sandbox:
     interface: browser-support
@@ -89,6 +83,16 @@ plugs:
   shmem:
     interface: shared-memory
     private: true
+  chromium-ffmpeg-115016:
+    interface: content
+    target: $SNAP
+    default-provider: chromium-ffmpeg
+
+slots:
+  dbus-daemon:
+    interface: dbus
+    bus: session
+    name: com.vivaldi.vivaldi
 
 parts:
   vivaldi:
@@ -143,8 +147,8 @@ parts:
       done
       # fix the rights on the sandbox file
       chmod 4755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
-      # icon path fixup (is 128x128 enough for hidpi?)
-      sed -i 's|Icon=vivaldi|Icon=usr/share/icons/hicolor/128x128/apps/vivaldi.png|' $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop
+      # icon path fixup
+      sed -i 's|Icon=vivaldi|Icon=usr/share/icons/hicolor/256x256/apps/vivaldi.png|' $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop
 
   launcher:
     plugin: dump

@@ -12,4 +12,10 @@ else
   PASSWORD_STORE=basic
 fi
 
-exec "$SNAP/opt/vivaldi/vivaldi-bin" --no-default-browser-check --no-first-run --password-store=$PASSWORD_STORE "$@"
+# if there is a snap connection to chromium-ffmpeg we will see a directory in the root
+if [ -d "$SNAP/chromium-ffmpeg/" ]; then
+    LD_LIBRARY_PATH=$SNAP/chromium-ffmpeg/:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH
+fi
+
+exec "$SNAP/opt/vivaldi/vivaldi-bin" --no-default-browser-check --no-first-run --password-store=$PASSWORD_STORE --no-sandbox "$@"
