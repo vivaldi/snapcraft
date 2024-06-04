@@ -1,7 +1,6 @@
 name: vivaldi
 version: 6.7.3329.35-1
 summary: Vivaldi Browser - Feature-packed web browser
-# NOT SURE IF WE CAN USE HTML HERE
 description: |
     The web browser for techies and people who need a browser that helps them get things done.
     The user interface is fully customizable, including keyboard shortcuts, mouse gestures, and programmable macros.
@@ -10,6 +9,10 @@ description: |
 confinement: strict
 grade: stable
 base: core22
+
+# TODO: source-code
+# TODO: compression: lzo
+
 # TODO: license
 # TODO: publisher
 # TODO: linter problems
@@ -31,10 +34,6 @@ base: core22
 #   * XDG open handling
 #   * Sound
 #   * DCONF
-
-# args needed for this to start a window (TODO: fix the need for these):
-# --no-sandbox
-# this is specified in launcher but we need to fix the sandboxing
 
 apps:
   vivaldi:
@@ -67,6 +66,7 @@ apps:
       - upower-observe
       - opengl
       - shmem
+      - browser-sandbox
     slots:
       - dbus-daemon
 
@@ -74,12 +74,6 @@ plugs:
   browser-sandbox:
     interface: browser-support
     allow-sandbox: true
-  vivaldi-config:
-    interface: personal-files
-    read: [$HOME/.config/vivaldi]
-  dot-local-share-applications:
-    interface: personal-files
-    write: [$HOME/.local/share/applications]
   shmem:
     interface: shared-memory
     private: true
@@ -135,20 +129,29 @@ parts:
       - libasound2
       - libgl1
     override-build: |
-      # install files from vivaldi opt
-      sed -i 's,HOME/.local/lib/vivaldi,XDG_DATA_HOME/vivaldi-extra-libs,' $CRAFT_PART_BUILD/opt/vivaldi/update-ffmpeg
       mkdir -p $CRAFT_PART_INSTALL/opt
+      # install vivaldi data
       cp -r $CRAFT_PART_BUILD/opt/vivaldi $CRAFT_PART_INSTALL/opt
+
+      # install desktop file
       mkdir -p $CRAFT_PART_INSTALL/usr/share/applications/
       install $CRAFT_PART_BUILD/usr/share/applications/vivaldi-stable.desktop $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop
+
+      # deploy icons into the install dir
       for size in 16 24 32 48 64 128 256; do
           mkdir -p $CRAFT_PART_INSTALL/usr/share/icons/hicolor/${size}x${size}/
           install -Dm 644 $CRAFT_PART_BUILD/opt/vivaldi/product_logo_${size}.png $CRAFT_PART_INSTALL/usr/share/icons/hicolor/${size}x${size}/apps/vivaldi.png
       done
       # fix the rights on the sandbox file
       chmod 4755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
+
       # icon path fixup
       sed -i 's|Icon=vivaldi|Icon=usr/share/icons/hicolor/256x256/apps/vivaldi.png|' $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop
+      # we don't need update-ffmpeg (we're using chromium-ffmpeg plug)
+      rm $CRAFT_PART_INSTALL/opt/vivaldi/update-ffmpeg
+
+      # we're using vivaldi binary directly (this overwrites the shell wrapper)
+      mv $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-bin $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi
 
   launcher:
     plugin: dump
