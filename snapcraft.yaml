@@ -94,7 +94,7 @@ parts:
     after:
       - launcher
     source: https://downloads.vivaldi.com/stable/vivaldi-stable-6.7.3329.39-amd64-binsrc.tar.gz
-    source-checksum: sha512/155fb892df5a38a0cee8f81a339c9a101b716fd88ccffeea3fc012bcfaf6891a7e464ac5d233fb725962f17a78533491618d9789408e722f25415f54551b590e
+    source-checksum: sha512/0f38a641e042ebde76331284d9f125cf322dbef9f54e59cea3e7c8a12a9d1a4e87cfae744539a8a109e7e5bc94f84ffd1fa0d45f6a908804f73fe9ec8a771f38
     build-packages:
       - coreutils # for install command
       - sed
@@ -137,9 +137,6 @@ parts:
 
       # install all /usr files from our package as well
       cp -r $CRAFT_PART_BUILD/usr $CRAFT_PART_INSTALL/
-
-      # rename the desktop file
-      mv $CRAFT_PART_INSTALL/usr/share/applications/vivaldi-stable.desktop $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop
 
       # fix the rights on the sandbox file
       chmod 4755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
