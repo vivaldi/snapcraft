@@ -92,7 +92,6 @@ parts:
     source: https://downloads.vivaldi.com/stable/vivaldi-stable-6.7.3329.39-amd64-binsrc.tar.gz
     source-checksum: sha512/0f38a641e042ebde76331284d9f125cf322dbef9f54e59cea3e7c8a12a9d1a4e87cfae744539a8a109e7e5bc94f84ffd1fa0d45f6a908804f73fe9ec8a771f38
     build-packages:
-      - coreutils # for install command
       - sed
     stage-packages:
       - libsecret-1-0
