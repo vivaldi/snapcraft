@@ -124,17 +124,8 @@ parts:
       - libasound2
       - libgl1
     override-build: |
-      mkdir -p $CRAFT_PART_INSTALL/opt
-      mkdir -p $CRAFT_PART_INSTALL/usr
-
       # install vivaldi data
-      cp -r $CRAFT_PART_BUILD/opt/vivaldi $CRAFT_PART_INSTALL/opt
-
-      # install all /usr files from our package as well
-      cp -r $CRAFT_PART_BUILD/usr $CRAFT_PART_INSTALL/
-
-      # fix the rights on the sandbox file
-      chmod 755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
+      cp -r $CRAFT_PART_BUILD/opt $CRAFT_PART_BUILD/usr $CRAFT_PART_INSTALL
 
       # icon path fixup
       sed -i 's|Icon=vivaldi|Icon=usr/share/icons/hicolor/256x256/apps/vivaldi.png|' $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop
