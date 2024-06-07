@@ -16,9 +16,15 @@ icon: vivaldi_icon.png
 compression: lzo
 adopt-info: vivaldi
 
-# TODO: source-code
+architectures:
+- build-on: amd64
 
+# TODO: source-code
 # TODO: linter problems
+
+# These will need a different source file and I can't find a way to do that
+# TODO: separate file? - build-on: armhf
+# TODO: separate file? - build-on: arm64
 
 # TODO: Test and fix:
 #   * filesystem handling (downloads, etc)
@@ -27,7 +33,6 @@ adopt-info: vivaldi
 #   * secure-storage related stuff
 #     - handling of gnome-keyring
 #   * policy patch? https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/tree/build/chromium-patches/snap-policies-path.patch
-#   * search engines
 #   * usb midi
 #   * XDG open handling
 #   * Sound
@@ -42,7 +47,7 @@ apps:
     plugs:
       - audio-playback
       - audio-record
-      - bluez # for Web Bluetooth (https://launchpad.net/bugs/1887201)
+      - bluez
       - browser-sandbox
       - camera
       - cups
@@ -57,7 +62,7 @@ apps:
       - network-manager
       - opengl
       - password-manager-service
-      - raw-usb # for WebUSB (https://launchpad.net/bugs/1780678)
+      - raw-usb
       - removable-media
       - screen-inhibit-control
       - shmem
@@ -139,7 +144,7 @@ parts:
       cp -r $CRAFT_PART_BUILD/usr $CRAFT_PART_INSTALL/
 
       # fix the rights on the sandbox file
-      chmod 4755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
+      chmod 755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
 
       # icon path fixup
       sed -i 's|Icon=vivaldi|Icon=usr/share/icons/hicolor/256x256/apps/vivaldi.png|' $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop
