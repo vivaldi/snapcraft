@@ -72,9 +72,6 @@ apps:
       - wayland
       - x11
 
-    slots:
-      - dbus-daemon
-
 plugs:
   browser-sandbox:
     interface: browser-support
@@ -86,12 +83,6 @@ plugs:
     interface: content
     target: $SNAP
     default-provider: chromium-ffmpeg
-
-slots:
-  dbus-daemon:
-    interface: dbus
-    bus: session
-    name: com.vivaldi.vivaldi
 
 parts:
   vivaldi:
