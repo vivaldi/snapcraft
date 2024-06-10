@@ -1,5 +1,5 @@
 name: vivaldi
-version: 6.7.3329.39-1
+version: 6.7.3329.39
 summary: Vivaldi Browser - Feature-packed web browser
 description: |
     The web browser for techies and people who need a browser that helps them get things done.
@@ -57,6 +57,7 @@ apps:
       - home
       - joystick
       - mount-observe
+      - mpris
       - network
       - network-bind
       - network-manager
@@ -86,11 +87,11 @@ plugs:
 
 parts:
   vivaldi:
-    plugin: nil
+    plugin: dump
     after:
       - launcher
-    source: https://downloads.vivaldi.com/stable/vivaldi-stable-6.7.3329.39-amd64-binsrc.tar.gz
-    source-checksum: sha512/0f38a641e042ebde76331284d9f125cf322dbef9f54e59cea3e7c8a12a9d1a4e87cfae744539a8a109e7e5bc94f84ffd1fa0d45f6a908804f73fe9ec8a771f38
+    source: https://downloads.vivaldi.com/stable/vivaldi-stable-$SNAPCRAFT_PROJECT_VERSION-$CRAFT_ARCH_BUILD_FOR-binsrc.tar.gz
+    source-type: tar
     stage-packages:
       - libsecret-1-0
       - libatk1.0-0
@@ -121,9 +122,6 @@ parts:
       - xdg-utils
       - libasound2
       - libgl1
-    override-build: |
-      # install vivaldi data
-      cp -r $CRAFT_PART_BUILD/opt $CRAFT_PART_BUILD/usr $CRAFT_PART_INSTALL
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
   launcher:
