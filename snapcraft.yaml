@@ -18,6 +18,11 @@ adopt-info: vivaldi
 
 architectures:
 - build-on: amd64
+  build-for: amd64
+- build-on: amd64
+  build-for: arm64
+- build-on: amd64
+  build-for: armhf
 
 # TODO: source-code
 # TODO: linter problems
