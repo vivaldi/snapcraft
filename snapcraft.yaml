@@ -13,7 +13,7 @@ website: https://vivaldi.com
 grade: stable
 base: core22
 icon: vivaldi_icon.png
-compression: lzo
+compression: xz
 adopt-info: vivaldi
 
 architectures:
@@ -26,10 +26,6 @@ architectures:
 
 # TODO: source-code
 # TODO: linter problems
-
-# These will need a different source file and I can't find a way to do that
-# TODO: separate file? - build-on: armhf
-# TODO: separate file? - build-on: arm64
 
 # TODO: Test and fix:
 #   * filesystem handling (downloads, etc)
