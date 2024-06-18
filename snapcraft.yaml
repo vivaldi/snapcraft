@@ -1,5 +1,5 @@
 name: vivaldi
-version: 6.7.3329.39
+version: 6.8.3381.37
 summary: Vivaldi Browser - Feature-packed web browser
 description: |
     The web browser for techies and people who need a browser that helps them get things done.
@@ -24,9 +24,7 @@ architectures:
 - build-on: amd64
   build-for: armhf
 
-# TODO: source-code
 # TODO: linter problems
-
 # TODO: Test and fix:
 #   * filesystem handling (downloads, etc)
 #   * cups/printing
@@ -81,7 +79,7 @@ plugs:
   shmem:
     interface: shared-memory
     private: true
-  chromium-ffmpeg-115016:
+  chromium-ffmpeg-115541:
     interface: content
     target: $SNAP
     default-provider: chromium-ffmpeg
