@@ -1,5 +1,5 @@
 name: vivaldi
-version: 6.8.3381.37
+version: 6.8.3381.44
 summary: Vivaldi Browser - Feature-packed web browser
 description: |
     The web browser for techies and people who need a browser that helps them get things done.
@@ -13,7 +13,7 @@ website: https://vivaldi.com
 grade: stable
 base: core22
 icon: vivaldi_icon.png
-compression: xz
+compression: lzo
 adopt-info: vivaldi
 
 architectures:
@@ -121,6 +121,9 @@ parts:
       - xdg-utils
       - libasound2
       - libgl1
+    override-build: |
+      snapcraftctl build
+      chmod 755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
   launcher:
