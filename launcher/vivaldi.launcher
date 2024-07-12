@@ -18,4 +18,4 @@ if [ -d "$SNAP/chromium-ffmpeg/" ]; then
     export LD_LIBRARY_PATH
 fi
 
-exec "$SNAP/opt/vivaldi/vivaldi" --no-default-browser-check --no-first-run --password-store=$PASSWORD_STORE "$@"
+exec "$SNAP/opt/vivaldi/vivaldi" --no-default-browser-check --password-store=$PASSWORD_STORE "$@"
