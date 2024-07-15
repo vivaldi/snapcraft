@@ -33,16 +33,15 @@ architectures:
 #     - handling of gnome-keyring
 #   * policy patch? https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/tree/build/chromium-patches/snap-policies-path.patch
 #   * usb midi
-#   * XDG open handling
 #   * Sound
 #   * DCONF
 
 apps:
-  vivaldi:
+  vivaldi-stable:
     extensions: [gnome]
     command: bin/vivaldi.launcher
     common-id: com.vivaldi.Vivaldi
-    desktop: usr/share/applications/vivaldi.desktop
+    desktop: usr/share/applications/vivaldi-stable.desktop
     plugs:
       - audio-playback
       - audio-record
@@ -85,7 +84,7 @@ plugs:
     default-provider: chromium-ffmpeg
 
 parts:
-  vivaldi:
+  vivaldi-stable:
     plugin: dump
     after:
       - launcher
@@ -124,6 +123,8 @@ parts:
     override-build: |
       snapcraftctl build
       chmod 755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
+      # rename the desktop file to align with -stable designation
+      mv $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop $CRAFT_PART_INSTALL/usr/share/applications/vivaldi-stable.desktop
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
   launcher:
