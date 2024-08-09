@@ -1,13 +1,11 @@
 #!/bin/sh
 
-# Specify that no encrypted password store (keyring) should be used when the
-# password-manager-service interface is not plugged, because Chromium won't
-# fall back to the basic store (no encryption) if it fails to talk to the
-# default password store for the current desktop environment.
-# Ref: https://launchpad.net/bugs/1763829
 
-if snapctl is-connected password-manager-service; then
-  PASSWORD_STORE= # an empty string means detect the store based on the current DE (os_crypt::SelectBackend())
+# Use encrypted backend if dbus connection to xdg-desktop-portal Secret is available
+dbus-send --session --print-reply --dest=org.freedesktop.portal.Desktop /org/freedesktop/portal/desktop org.freedesktop.DBus.Properties.Get string:"org.freedesktop.portal.Secret" string:"version" > /dev/null 2>&1
+
+if [ $? -eq 0 ]; then
+  PASSWORD_STORE=xdg-desktop-portal
 else
   PASSWORD_STORE=basic
 fi

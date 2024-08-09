@@ -33,7 +33,6 @@ architectures:
 #     - handling of gnome-keyring
 #   * policy patch? https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/tree/build/chromium-patches/snap-policies-path.patch
 #   * usb midi
-#   * Sound
 #   * DCONF
 
 apps:
