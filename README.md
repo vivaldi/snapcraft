@@ -21,5 +21,3 @@ snap connect vivaldi:browser-sandbox
 ```
 snap connect vivaldi:chromium-ffmpeg-115016 chromium-ffmpeg:chromium-ffmpeg-115016
 ```
-
-These will have to be requested to be auto-connected in snap store (TODO right here, eh?!)
