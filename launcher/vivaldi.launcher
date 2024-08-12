@@ -7,8 +7,11 @@ dbus-send --session --print-reply --dest=org.freedesktop.portal.Desktop /org/fre
 if [ $? -eq 0 ]; then
   PASSWORD_STORE=xdg-desktop-portal
 else
-  PASSWORD_STORE=basic
+  PASSWORD_STORE=
 fi
+
+# Temporary: Disabling the desktop-portal support until it is ready
+PASSWORD_STORE=
 
 # if there is a snap connection to chromium-ffmpeg we will see a directory in the root
 if [ -d "$SNAP/chromium-ffmpeg/" ]; then
