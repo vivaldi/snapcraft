@@ -1,5 +1,5 @@
 name: vivaldi
-version: 6.8.3381.46
+version: 6.8.3381.53
 summary: Vivaldi Browser - Feature-packed web browser
 description: |
     The web browser for techies and people who need a browser that helps them get things done.
@@ -23,17 +23,6 @@ architectures:
   build-for: arm64
 - build-on: amd64
   build-for: armhf
-
-# TODO: linter problems
-# TODO: Test and fix:
-#   * filesystem handling (downloads, etc)
-#   * cups/printing
-#   * wayland/x11 - support both
-#   * secure-storage related stuff
-#     - handling of gnome-keyring
-#   * policy patch? https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/tree/build/chromium-patches/snap-policies-path.patch
-#   * usb midi
-#   * DCONF
 
 apps:
   vivaldi-stable:
