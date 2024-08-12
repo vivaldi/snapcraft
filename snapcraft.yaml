@@ -111,8 +111,6 @@ parts:
     override-build: |
       snapcraftctl build
       chmod 755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
-      # rename the desktop file to align with -stable designation
-      mv $CRAFT_PART_INSTALL/usr/share/applications/vivaldi.desktop $CRAFT_PART_INSTALL/usr/share/applications/vivaldi-stable.desktop
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
   launcher:
