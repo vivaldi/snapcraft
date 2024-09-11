@@ -10,9 +10,6 @@ else
   PASSWORD_STORE=
 fi
 
-# Temporary: Disabling the desktop-portal support until it is ready
-PASSWORD_STORE=
-
 # if there is a snap connection to chromium-ffmpeg we will see a directory in the root
 if [ -d "$SNAP/chromium-ffmpeg/" ]; then
     LD_LIBRARY_PATH=$SNAP/chromium-ffmpeg/:$LD_LIBRARY_PATH
