@@ -19,5 +19,5 @@ snap connect vivaldi:browser-sandbox
 ### FFMPEG (Proprietary codecs)
 
 ```
-snap connect vivaldi:chromium-ffmpeg-115016 chromium-ffmpeg:chromium-ffmpeg-115016
+snap connect vivaldi:chromium-ffmpeg-115541 chromium-ffmpeg:chromium-ffmpeg-115541
 ```
