@@ -4,8 +4,6 @@ summary: Vivaldi Browser - Feature-packed web browser
 description: |
     The web browser for techies and people who need a browser that helps them get things done.
     The user interface is fully customizable, including keyboard shortcuts, mouse gestures, and programmable macros.
-
-    NOTE: This package is maintained by but not yet officially endorsed or supported by Vivaldi Technologies.
 confinement: strict
 license: Proprietary
 type: app
@@ -70,6 +68,10 @@ plugs:
     interface: content
     target: $SNAP
     default-provider: chromium-ffmpeg
+  icon-themes:
+    interface: content
+    target: $SNAP/data-dir/icons
+    default-provider: gtk-common-themes
 
 parts:
   vivaldi-stable:
