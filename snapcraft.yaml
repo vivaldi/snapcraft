@@ -54,6 +54,7 @@ apps:
       - system-packages-doc
       - u2f-devices
       - upower-observe
+      - unity7
       - wayland
       - x11
 
