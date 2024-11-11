@@ -37,6 +37,8 @@ apps:
       - cups
       - desktop
       - desktop-legacy
+      - dot-local-share-applications
+      - dot-local-share-icons
       - hardware-observe
       - home
       - joystick
