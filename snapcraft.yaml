@@ -102,7 +102,6 @@ parts:
       - libdrm2
       - libexpat1
       - libgbm1
-      - libglib2.0-0
       - libgtk-3-0
       - libnspr4
       - libnss3
