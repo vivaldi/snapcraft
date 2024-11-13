@@ -37,8 +37,6 @@ apps:
       - cups
       - desktop
       - desktop-legacy
-      - dot-local-share-applications
-      - dot-local-share-icons
       - hardware-observe
       - home
       - joystick
@@ -75,14 +73,6 @@ plugs:
     interface: content
     target: $SNAP/data-dir/icons
     default-provider: gtk-common-themes
-  dot-local-share-applications:
-    interface: personal-files
-    write:
-      - $HOME/.local/share/applications
-  dot-local-share-icons:
-    interface: personal-files
-    write:
-      - $HOME/.local/share/icons
 
 parts:
   vivaldi-stable:
