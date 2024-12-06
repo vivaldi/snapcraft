@@ -125,6 +125,17 @@ parts:
       chmod 755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
+  # Copied from Chromium's snapcraft.yaml - patches xdg-icon-resource
+  # to place the icons in a different location than dictated by XDG_DATA_HOME.
+  # Fixes VB-112129 - PWA Icons not installed in correct location.
+  xdg-icon-resource:
+    plugin: nil
+    stage-packages: [xdg-utils]
+    stage: [usr/bin/xdg-icon-resource]
+    override-prime: |
+      find /root -path '*/usr/bin/xdg-icon-resource' -print -exec sed -i '/^xdg_user_dir="$XDG_DATA_HOME"$/s|".*"|$SNAP_REAL_HOME/.local/share/|' {} +
+      craftctl default
+
   launcher:
     plugin: dump
     source: launcher
