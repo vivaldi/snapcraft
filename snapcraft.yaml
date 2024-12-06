@@ -133,7 +133,7 @@ parts:
     stage-packages: [xdg-utils]
     stage: [usr/bin/xdg-icon-resource]
     override-prime: |
-      find /root -path '*/usr/bin/xdg-icon-resource' -print -exec sed -i '/^xdg_user_dir="$XDG_DATA_HOME"$/s|".*"|$SNAP_REAL_HOME/.local/share/|' {} +
+      find / -path '*/usr/bin/xdg-icon-resource' -print -exec sed -i '/^xdg_user_dir="$XDG_DATA_HOME"$/s|".*"|$SNAP_REAL_HOME/.local/share/|' {} +
       craftctl default
 
   launcher:
