@@ -16,7 +16,7 @@ if [ -d "$SNAP/chromium-ffmpeg/" ]; then
     export LD_LIBRARY_PATH
 fi
 
-# Convinces chrome it's running from this path - fixes Exec= entries in generated .desktop files
-export CHROME_WRAPPER=/snap/bin/$SNAP_INSTANCE_NAME
+# Convinces Vivaldi it's running from this path - fixes Exec= entries in generated .desktop files
+export CHROME_WRAPPER=/snap/bin/${SNAP_INSTANCE_NAME}.vivaldi-stable
 
 exec "$SNAP/opt/vivaldi/vivaldi" --password-store=$PASSWORD_STORE "$@"
