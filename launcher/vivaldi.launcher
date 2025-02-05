@@ -21,6 +21,6 @@ export CHROME_WRAPPER=/snap/bin/${SNAP_INSTANCE_NAME}.vivaldi-stable
 
 # Temp workaround for VB-113321 ([Crash][Linux] On start on arm64 for some users)
 # See also: https://issues.chromium.org/issues/378017037
-[ "$(uname -m)" = "aarch64" ] && VIVALDI_JS_FLAGS='--js-flags="--nodecommit_pooled_pages"'
+[ "$(uname -m)" = "aarch64" ] && VIVALDI_JS_FLAGS='--js-flags=--nodecommit_pooled_pages'
 
 exec "$SNAP/opt/vivaldi/vivaldi" --password-store=$PASSWORD_STORE "${VIVALDI_JS_FLAGS:-}" "$@"
