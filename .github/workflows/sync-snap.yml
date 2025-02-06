@@ -1,0 +1,32 @@
+name: Update
+
+on:
+  # Runs at 10:00 UTC every day
+  schedule:
+    - cron:  '0 10 * * *'
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: 🔄 Sync version with upstream
+    environment: "Main Branch"
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔄 Sync version with upstream
+        uses: snapcrafters/ci/sync-version@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "main"
+          update-script: |
+            VIVALDI_VERSION=$(curl -s https://vivaldi.com/download/ | grep -oP 'href="https://downloads.vivaldi.com/stable/vivaldi-stable_\K[0-9.]+(?=-1_amd64\.deb)')
+            sed -i 's/^\(version: \).*$/\1'"$VIVALDI_VERSION"'/' snapcraft.yaml
+
+            # Grab the latest version of the chromium-ffmpeg snap 
+            # which is in the candidate channel, for arm64
+            CHROMIUM_FFMPEG_VERSION=$(curl -s -X GET   -H "Snap-Device-Series: 16"   -H "User-Agent: custom-client/1.0"   "https://api.snapcraft.io/v2/snaps/info/chromium-ffmpeg?fields=version" | jq -r '.["channel-map"][] | select(.channel.name == "candidate" and .channel.architecture == "arm64")' | jq -r ".version" | cut --delimiter "-" -f 1)
+            sed -i "s/chromium-ffmpeg-[0-9]\{6\}/chromium-ffmpeg-$CHROMIUM_FFMPEG_VERSION/" snapcraft.yaml
