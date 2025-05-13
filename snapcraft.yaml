@@ -1,5 +1,5 @@
 name: vivaldi
-version: 7.3.3635.12
+version: 7.4.3684.25
 summary: Vivaldi Browser - Feature-packed web browser
 description: |
     The web browser for techies and people who need a browser that helps them get things done.
@@ -67,7 +67,7 @@ plugs:
   shmem:
     interface: shared-memory
     private: true
-  chromium-ffmpeg-118887:
+  chromium-ffmpeg-119605:
     interface: content
     target: $SNAP
     default-provider: chromium-ffmpeg
