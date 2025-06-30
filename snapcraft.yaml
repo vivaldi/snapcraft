@@ -43,7 +43,6 @@ apps:
       - home
       - joystick
       - mount-observe
-      - mpris
       - network
       - network-bind
       - network-manager
@@ -59,6 +58,8 @@ apps:
       - unity7
       - wayland
       - x11
+    slots:
+      - mpris
 
 plugs:
   browser-sandbox:
@@ -83,6 +84,11 @@ plugs:
     interface: personal-files
     write:
       - $HOME/.local/share/icons
+
+slots:
+  mpris:
+    interface: mpris
+    name: vivaldi
 
 parts:
   vivaldi-stable:
