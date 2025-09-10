@@ -123,7 +123,6 @@ parts:
       - libxkbcommon0
       - libxrandr2
       - wget
-      - xdg-utils
       - libasound2
       - libgl1
     override-build: |
