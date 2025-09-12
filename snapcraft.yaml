@@ -19,8 +19,6 @@ architectures:
   build-for: amd64
 - build-on: amd64
   build-for: arm64
-- build-on: amd64
-  build-for: armhf
 
 apps:
   vivaldi-stable:
