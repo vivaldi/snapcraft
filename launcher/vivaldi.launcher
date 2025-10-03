@@ -25,11 +25,24 @@ export CHROME_WRAPPER=/snap/bin/${SNAP_INSTANCE_NAME}.vivaldi-stable
 unset ID
 unset VERSION_ID
 
-# Source the system file os-release, which should correctly set $ID and $VERSION_ID
+# Check that /etc/os-release or fallback to /usr/lib/os-release are present and readable
+OS_RELEASE_FILE=""
 if [ -r /etc/os-release ]; then
-  . /etc/os-release
+  OS_RELEASE_FILE="/etc/os-release"
 elif [ -r /usr/lib/os-release ]; then
-  . /usr/lib/os-release
+  OS_RELEASE_FILE="/usr/lib/os-release"
+fi
+
+# Parse os-release line by line
+ID=""
+VERSION_ID=""
+if [ -n "$OS_RELEASE_FILE" ]; then
+  while IFS='=' read -r key value; do
+    case "$key" in
+      ID) ID="${value%\"}"; ID="${ID#\"}" ;;
+      VERSION_ID) VERSION_ID="${value%\"}"; VERSION_ID="${VERSION_ID#\"}" ;;
+    esac
+  done < "$OS_RELEASE_FILE"
 fi
 
 # In cases where $ID and $VERSION_ID are not set provide sensible defaults
