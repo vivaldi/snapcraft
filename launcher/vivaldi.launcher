@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 # Use encrypted backend if dbus connection to xdg-desktop-portal Secret is available
 dbus-send --session --print-reply --dest=org.freedesktop.portal.Desktop /org/freedesktop/portal/desktop org.freedesktop.DBus.Properties.Get string:"org.freedesktop.portal.Secret" string:"version" > /dev/null 2>&1
 
@@ -16,26 +15,18 @@ if [ -d "$SNAP/chromium-ffmpeg/" ]; then
     export LD_LIBRARY_PATH
 fi
 
-# Convinces Vivaldi it's running from this path - fixes Exec= entries in generated .desktop files
-export CHROME_WRAPPER=/snap/bin/${SNAP_INSTANCE_NAME}.vivaldi-stable
-
 # Detect distro and distro version and export as $DISTRO_NAME $DISTRO_VERSION_NUMBER
-
-# Cleanup in case the user exported these variable names already (since they are quite generic in their naming)
-unset ID
-unset VERSION_ID
-
-# Check that /etc/os-release or fallback to /usr/lib/os-release are present and readable
-OS_RELEASE_FILE=""
+## Check that /etc/os-release or fallback /usr/lib/os-release are present and readable
+ID=''
+VERSION_ID=''
+OS_RELEASE_FILE=''
 if [ -r /etc/os-release ]; then
   OS_RELEASE_FILE="/etc/os-release"
 elif [ -r /usr/lib/os-release ]; then
   OS_RELEASE_FILE="/usr/lib/os-release"
 fi
 
-# Parse os-release line by line
-ID=""
-VERSION_ID=""
+## Parse os-release line by line because sourcing it is problematic on some distros
 if [ -n "$OS_RELEASE_FILE" ]; then
   while IFS='=' read -r key value; do
     case "$key" in
@@ -45,12 +36,15 @@ if [ -n "$OS_RELEASE_FILE" ]; then
   done < "$OS_RELEASE_FILE"
 fi
 
-# In cases where $ID and $VERSION_ID are not set provide sensible defaults
+## In cases where $ID and $VERSION_ID are not set provide sensible defaults
 [ -z "${ID:-}" ] && ID=linux
-[ -z "${VERSION_ID:-}" ] && VERSION_ID="$(uname -r | tr -cd '[:alnum:]._-')"
+[ -z "${VERSION_ID:-}" ] && VERSION_ID="$(uname -r | tr -cd 'A-Za-z0-9._-' | tr 'A-Z' 'a-z')"
 
-# Export these values with less generic names
+## Export these values with less generic names
 export VIVALDI_DISTRO_NAME="$ID"
 export VIVALDI_DISTRO_VERSION_NUMBER="$VERSION_ID"
+
+# Convinces Vivaldi it's running from this path - fixes Exec= entries in generated .desktop files
+export CHROME_WRAPPER=/snap/bin/${SNAP_INSTANCE_NAME}.vivaldi-stable
 
 exec "$SNAP/opt/vivaldi/vivaldi" --password-store=$PASSWORD_STORE "$@"
