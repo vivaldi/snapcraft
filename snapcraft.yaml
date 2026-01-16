@@ -80,10 +80,6 @@ plugs:
     interface: personal-files
     write:
       - $HOME/.local/share/icons
-  gpu-2404:
-    interface: content
-    target: $SNAP/gpu-2404
-    default-provider: mesa-2404
 
 slots:
   mpris:
