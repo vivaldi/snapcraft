@@ -1,5 +1,5 @@
 name: vivaldi
-version: 7.7.3851.67
+version: 7.8.3925.62
 summary: Vivaldi Browser - Feature-packed web browser
 description: |
     The web browser for techies and people who need a browser that helps them get things done.
@@ -9,14 +9,16 @@ license: Proprietary
 type: app
 website: https://vivaldi.com
 grade: stable
-base: core24
+base: core22
 icon: vivaldi_icon.png
 compression: lzo
 adopt-info: vivaldi
 
-platforms:
-  amd64:
-  arm64:
+architectures:
+- build-on: amd64
+  build-for: amd64
+- build-on: amd64
+  build-for: arm64
 
 apps:
   vivaldi-stable:
@@ -103,7 +105,7 @@ parts:
       - libatspi2.0-0
       - libcairo2
       - libcups2
-      - libcurl4
+      - libcurl3-gnutls
       - libdbus-1-3
       - libdrm2
       - libexpat1
@@ -125,9 +127,6 @@ parts:
       - wget
       - libasound2
       - libgl1
-      - libproxy1v5
-      - libproxy1-plugin-networkmanager
-      - oss4-base
     override-build: |
       snapcraftctl build
       chmod 755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
@@ -141,9 +140,7 @@ parts:
     stage-packages: [xdg-utils]
     stage: [usr/bin/xdg-icon-resource]
     override-prime: |
-      set -eu
-      sed -i '/^xdg_user_dir="$XDG_DATA_HOME"$/s|".*"|$SNAP_REAL_HOME/.local/share/|' \
-        "$CRAFT_STAGE/usr/bin/xdg-icon-resource"
+      find / -path '*/usr/bin/xdg-icon-resource' -print -exec sed -i '/^xdg_user_dir="$XDG_DATA_HOME"$/s|".*"|$SNAP_REAL_HOME/.local/share/|' {} +
       craftctl default
 
   launcher:
