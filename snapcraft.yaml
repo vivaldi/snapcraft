@@ -119,6 +119,8 @@ parts:
       - libxkbcommon0
       - libxrandr2
       - wget
+      - qtbase5-plugins
+      - qtwayland5
       - libgl1
     override-build: |
       snapcraftctl build
