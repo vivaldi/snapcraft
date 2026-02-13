@@ -21,6 +21,8 @@ platforms:
 apps:
   vivaldi-stable:
     extensions: [gnome]
+    command-chain:
+    - bin/gpu-2404-wrapper
     command: bin/vivaldi.launcher
     common-id: com.vivaldi.Vivaldi
     desktop: usr/share/applications/vivaldi-stable.desktop
@@ -120,25 +122,9 @@ parts:
       - libxrandr2
       - wget
       - libgl1
-      - qtwayland5
     override-build: |
       snapcraftctl build
       chmod 755 $CRAFT_PART_INSTALL/opt/vivaldi/vivaldi-sandbox
-    # we need to link qt5 platforms plugins as otherwise QT wont run
-    # (qt searches plugin with paths relative to executable)
-    override-prime: |
-      set -eu
-      craftctl default
-      # Find the actual Qt5 Wayland platform plugin(s) that qtwayland5 should have staged
-      so_path="$(find "$CRAFT_PRIME" -type f -name 'libqwayland*.so' | head -n 1 || true)"
-      if [ -z "$so_path" ]; then
-        echo "ERROR: no libqwayland*.so found in prime; qtwayland5 not present or not staged into this part" >&2
-        exit 1
-      fi
-      src_dir="$(dirname "$so_path")"
-      dst_dir="$CRAFT_PRIME/opt/vivaldi/platforms"
-      mkdir -p "$CRAFT_PRIME/opt/vivaldi"
-      ln -s "$(realpath --relative-to="$CRAFT_PRIME/opt/vivaldi" "$src_dir")" "$dst_dir"
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
   # Copied from Chromium's snapcraft.yaml - patches xdg-icon-resource
@@ -154,8 +140,38 @@ parts:
         "$CRAFT_STAGE/usr/bin/xdg-icon-resource"
       craftctl default
 
+  # fix potential issues with libs not supporting gpu accel
+  gpu-2404:
+    after: [vivaldi-stable]
+    source: https://github.com/canonical/gpu-snap.git
+    plugin: dump
+    override-prime: |
+      craftctl default
+      ${CRAFT_PART_SRC}/bin/gpu-2404-cleanup mesa-2404
+      # Workaround for https://bugs.launchpad.net/snapd/+bug/2055273
+      mkdir -p "${CRAFT_PRIME}/gpu-2404"
+    prime:
+    - bin/gpu-2404-wrapper
+
   launcher:
     plugin: dump
     source: launcher
     organize:
       '*': bin/
+
+  qt5-wayland-qpa:
+    plugin: nil
+    stage-packages:
+      - qtwayland5
+      - libqt5waylandclient5
+      - libwayland-client0
+      - libwayland-cursor0
+      - libwayland-egl1
+    prime:
+      - usr/lib/**/qt5/plugins/platforms/libqwayland-*.so
+      - usr/lib/**/qt5/plugins/platforms/libqxcb.so
+      - usr/lib/**/libwayland-client.so.*
+      - usr/lib/**/libwayland-cursor.so.*
+      - usr/lib/**/libwayland-egl.so.*
+      - usr/lib/**/libQt5WaylandClient.so.*
+      - usr/lib/**/libQt5WaylandCompositor.so.*

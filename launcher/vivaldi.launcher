@@ -15,6 +15,14 @@ if [ -d "$SNAP/chromium-ffmpeg/" ]; then
     export LD_LIBRARY_PATH
 fi
 
+# Qt QPA platform plugins: force a valid platforms/ directory inside the snap
+if [ -z "${QT_QPA_PLATFORM_PLUGIN_PATH:-}" ]; then
+  QT_PLATFORMS_DIR="$(find "$SNAP/usr/lib" -type d -path '*/qt5/plugins/platforms' 2>/dev/null | head -n 1)"
+  if [ -n "$QT_PLATFORMS_DIR" ]; then
+    export QT_QPA_PLATFORM_PLUGIN_PATH="$QT_PLATFORMS_DIR"
+  fi
+fi
+
 # Detect distro and distro version and export as $DISTRO_NAME $DISTRO_VERSION_NUMBER
 ## Check that /etc/os-release or fallback /usr/lib/os-release are present and readable
 ID=''
