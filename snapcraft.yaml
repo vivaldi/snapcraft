@@ -79,7 +79,7 @@ plugs:
     default-provider: gtk-common-themes
   icon-themes:
     interface: content
-    target: $SNAP/share/icons
+    target: $SNAP/data-dir/icons
     default-provider: gtk-common-themes
   sound-themes:
     interface: content
