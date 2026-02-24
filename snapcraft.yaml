@@ -22,6 +22,7 @@ apps:
   vivaldi-stable:
     extensions: [gnome]
     command-chain:
+    - snap/command-chain/desktop-launch
     - bin/gpu-2404-wrapper
     command: bin/vivaldi.launcher
     common-id: com.vivaldi.Vivaldi
