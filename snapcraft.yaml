@@ -100,7 +100,7 @@ parts:
     plugin: dump
     after:
       - launcher
-      - ffmpeg-prebuilt
+      - ffmpeg-alt
     source: https://downloads.vivaldi.com/stable/vivaldi-stable-$SNAPCRAFT_PROJECT_VERSION-$CRAFT_ARCH_BUILD_FOR-binsrc.tar.gz
     source-type: tar
     stage-packages:
@@ -136,20 +136,20 @@ parts:
 
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
-  # This version of libffmpeg supports more codecs than the stock version does
-  ffmpeg-prebuilt:
+  # This version of libffmpeg supports more codecs than the stock Vivaldi version does
+  ffmpeg-alt:
     plugin: nil
     build-packages:
-      - wget
+      - curl
     override-build: |
       set -eu
-      FFMPEG_VER="0.115.0"
+      ELECTRON_VER="44.3.0" # Based on Chromium 152.0.7977.78
       case "$CRAFT_ARCH_BUILD_FOR" in
-        amd64) FFMPEG_ARCH="x64" ;;
-        arm64) FFMPEG_ARCH="arm64" ;;
+        amd64) ELECTRON_ARCH="x64"; ELECTRON_RANGE="118037660-119200632" ;;
+        arm64) ELECTRON_ARCH="arm64"; ELECTRON_RANGE="6081868-7190861" ;;
       esac
-      wget -qO- "https://github.com/nwjs-ffmpeg-prebuilt/nwjs-ffmpeg-prebuilt/releases/download/$FFMPEG_VER/${FFMPEG_VER}-linux-$FFMPEG_ARCH.zip" | \
-        gzip -d > "$CRAFT_PART_INSTALL/libffmpeg.so"
+      curl -sLr "$ELECTRON_RANGE" "https://github.com/electron/electron/releases/download/v$ELECTRON_VER/electron-v${ELECTRON_VER}-linux-$ELECTRON_ARCH.zip" | \
+        zcat > "$CRAFT_PART_INSTALL/libffmpeg.so"
       craftctl default
 
   # Copied from Chromium's snapcraft.yaml - patches xdg-icon-resource
