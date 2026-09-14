@@ -136,7 +136,8 @@ parts:
 
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
-  # This version of libffmpeg supports more codecs than the stock Vivaldi version does
+  # Use a version of libffmpeg.so that supports additional codecs
+  # This needs to be updated when Vivaldi changes major Chromium version
   ffmpeg-alt:
     plugin: nil
     build-packages:
@@ -146,16 +147,21 @@ parts:
       # From Electron 44.3.0 (based on Chromium 152.0.7977.78)
       case "$CRAFT_ARCH_BUILD_FOR" in
         amd64)
-          ELECTRON_RANGE="118037660-119200632"
-          ELECTRON_URL="https://api.github.com/repos/electron/electron/releases/assets/550954348"
+          ELECTRON_URL=https://api.github.com/repos/electron/electron/releases/assets/550954348
+          FFMPEG_ZSTART=118037660
+          FFMPEG_ZSIZE=1162972
+          FFMPEG_SUM=8411c1c99ac0cefd842cf6dc02b9048ba0627e1aeb42d1d362a123b155a03cfa
           ;;
         arm64)
-          ELECTRON_RANGE="6081868-7190861"
-          ELECTRON_URL="https://api.github.com/repos/electron/electron/releases/assets/550956706"
+          ELECTRON_URL=https://api.github.com/repos/electron/electron/releases/assets/550956706
+          FFMPEG_ZSTART=6081868
+          FFMPEG_ZSIZE=1108993
+          FFMPEG_SUM=bb5437ee1713e48fbc7c0ee98bb08c850becb8cce8086a3f63eeba03cf84cc92
           ;;
       esac
-      curl --header 'Accept: application/octet-stream' -sLr "$ELECTRON_RANGE" "$ELECTRON_URL" | \
+      curl -H 'Accept: application/octet-stream' -sLr "$FFMPEG_ZSTART"-"$(expr $FFMPEG_ZSTART + $FFMPEG_ZSIZE)" "$ELECTRON_URL" | \
         zcat > "$CRAFT_PART_INSTALL/libffmpeg.so"
+      echo "$FFMPEG_SUM  $CRAFT_PART_INSTALL/libffmpeg.so" | sha256sum --quiet -c
       craftctl default
     prime:
       - -libffmpeg.so
