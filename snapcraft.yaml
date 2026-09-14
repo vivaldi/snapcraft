@@ -1,5 +1,5 @@
 name: vivaldi
-version: 8.2.4133.52
+version: 8.2.4133.55
 summary: Vivaldi Browser - Feature-packed web browser
 description: |
     The web browser for techies and people who need a browser that helps them get things done.
@@ -69,10 +69,6 @@ plugs:
   shmem:
     interface: shared-memory
     private: true
-  chromium-ffmpeg-git-2026-05-18:
-    interface: content
-    target: $SNAP
-    default-provider: chromium-ffmpeg
   gtk-3-themes:
     interface: content
     target: $SNAP/share/themes
@@ -104,6 +100,7 @@ parts:
     plugin: dump
     after:
       - launcher
+      - ffmpeg-prebuilt
     source: https://downloads.vivaldi.com/stable/vivaldi-stable-$SNAPCRAFT_PROJECT_VERSION-$CRAFT_ARCH_BUILD_FOR-binsrc.tar.gz
     source-type: tar
     stage-packages:
@@ -134,7 +131,26 @@ parts:
       # for ui backend.
       rm -f "$CRAFT_PART_INSTALL/opt/vivaldi/libqt5_shim.so" \
             "$CRAFT_PART_INSTALL/opt/vivaldi/libqt6_shim.so"
+      # Copy the updated ffmpeg into place
+      cp "$CRAFT_STAGE/libffmpeg.so" "$CRAFT_PART_INSTALL/opt/vivaldi/libffmpeg.so"
+
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
+
+  # This version of libffmpeg supports more codecs than the stock version does
+  ffmpeg-prebuilt:
+    plugin: nil
+    build-packages:
+      - wget
+    override-build: |
+      set -eu
+      FFMPEG_VER="0.115.0"
+      case "$CRAFT_ARCH_BUILD_FOR" in
+        amd64) FFMPEG_ARCH="x64" ;;
+        arm64) FFMPEG_ARCH="arm64" ;;
+      esac
+      wget -qO- "https://github.com/nwjs-ffmpeg-prebuilt/nwjs-ffmpeg-prebuilt/releases/download/$FFMPEG_VER/${FFMPEG_VER}-linux-$FFMPEG_ARCH.zip" | \
+        gzip -d > "$CRAFT_PART_INSTALL/libffmpeg.so"
+      craftctl default
 
   # Copied from Chromium's snapcraft.yaml - patches xdg-icon-resource
   # to place the icons in a different location than dictated by XDG_DATA_HOME.
