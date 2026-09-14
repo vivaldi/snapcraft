@@ -131,8 +131,8 @@ parts:
       # for ui backend.
       rm -f "$CRAFT_PART_INSTALL/opt/vivaldi/libqt5_shim.so" \
             "$CRAFT_PART_INSTALL/opt/vivaldi/libqt6_shim.so"
-      # Move the updated ffmpeg into place
-      mv "$CRAFT_STAGE/libffmpeg.so" "$CRAFT_PART_INSTALL/opt/vivaldi/libffmpeg.so"
+      # Copy the updated ffmpeg into place
+      cp "$CRAFT_STAGE/libffmpeg.so" "$CRAFT_PART_INSTALL/opt/vivaldi/libffmpeg.so"
 
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
@@ -143,14 +143,22 @@ parts:
       - curl
     override-build: |
       set -eu
-      ELECTRON_VER="44.3.0" # Based on Chromium 152.0.7977.78
+      # From Electron 44.3.0 (based on Chromium 152.0.7977.78)
       case "$CRAFT_ARCH_BUILD_FOR" in
-        amd64) ELECTRON_ARCH="x64"; ELECTRON_RANGE="118037660-119200632" ;;
-        arm64) ELECTRON_ARCH="arm64"; ELECTRON_RANGE="6081868-7190861" ;;
+        amd64)
+          ELECTRON_RANGE="118037660-119200632"
+          ELECTRON_URL="https://api.github.com/repos/electron/electron/releases/assets/550954348"
+          ;;
+        arm64)
+          ELECTRON_RANGE="6081868-7190861"
+          ELECTRON_URL="https://api.github.com/repos/electron/electron/releases/assets/550956706"
+          ;;
       esac
-      curl -sLr "$ELECTRON_RANGE" "https://github.com/electron/electron/releases/download/v$ELECTRON_VER/electron-v${ELECTRON_VER}-linux-$ELECTRON_ARCH.zip" | \
+      curl --header 'Accept: application/octet-stream' -sLr "$ELECTRON_RANGE" "$ELECTRON_URL" | \
         zcat > "$CRAFT_PART_INSTALL/libffmpeg.so"
       craftctl default
+    prime:
+      - -libffmpeg.so
 
   # Copied from Chromium's snapcraft.yaml - patches xdg-icon-resource
   # to place the icons in a different location than dictated by XDG_DATA_HOME.
