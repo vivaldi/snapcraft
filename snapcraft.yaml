@@ -131,8 +131,8 @@ parts:
       # for ui backend.
       rm -f "$CRAFT_PART_INSTALL/opt/vivaldi/libqt5_shim.so" \
             "$CRAFT_PART_INSTALL/opt/vivaldi/libqt6_shim.so"
-      # Copy the updated ffmpeg into place
-      cp "$CRAFT_STAGE/libffmpeg.so" "$CRAFT_PART_INSTALL/opt/vivaldi/libffmpeg.so"
+      # Move the updated ffmpeg into place
+      mv "$CRAFT_STAGE/libffmpeg.so" "$CRAFT_PART_INSTALL/opt/vivaldi/libffmpeg.so"
 
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
