@@ -9,12 +9,6 @@ else
   PASSWORD_STORE=
 fi
 
-# if there is a snap connection to chromium-ffmpeg we will see a directory in the root
-if [ -d "$SNAP/chromium-ffmpeg/" ]; then
-    LD_LIBRARY_PATH=$SNAP/chromium-ffmpeg/:$LD_LIBRARY_PATH
-    export LD_LIBRARY_PATH
-fi
-
 # Qt QPA platform plugins: force a valid platforms/ directory inside the snap
 if [ -z "${QT_QPA_PLATFORM_PLUGIN_PATH:-}" ]; then
   QT_PLATFORMS_DIR="$(find "$SNAP/usr/lib" -type d -path '*/qt5/plugins/platforms' 2>/dev/null | head -n 1)"
