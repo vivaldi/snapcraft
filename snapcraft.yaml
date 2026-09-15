@@ -144,19 +144,19 @@ parts:
       - curl
     override-build: |
       set -eu
-      # From Electron 44.3.0 (based on Chromium 152.0.7977.78)
+      # From Electron 44.4.0 (based on Chromium 152.0.7977.78)
       case "$CRAFT_ARCH_BUILD_FOR" in
         amd64)
-          ELECTRON_URL=https://api.github.com/repos/electron/electron/releases/assets/550954348
-          FFMPEG_ZSTART=118037660
-          FFMPEG_ZSIZE=1162972
-          FFMPEG_SUM=8411c1c99ac0cefd842cf6dc02b9048ba0627e1aeb42d1d362a123b155a03cfa
+          ELECTRON_URL=https://api.github.com/repos/electron/electron/releases/assets/566009187
+          FFMPEG_ZSTART=392937
+          FFMPEG_ZSIZE=1163002
+          FFMPEG_SUM=66256b8b6e5cf42ff3bb7c31233503116a85e0bc0220aae0106992954d426695
           ;;
         arm64)
-          ELECTRON_URL=https://api.github.com/repos/electron/electron/releases/assets/550956706
-          FFMPEG_ZSTART=6081868
-          FFMPEG_ZSIZE=1108993
-          FFMPEG_SUM=bb5437ee1713e48fbc7c0ee98bb08c850becb8cce8086a3f63eeba03cf84cc92
+          ELECTRON_URL=https://api.github.com/repos/electron/electron/releases/assets/566024692
+          FFMPEG_ZSTART=93519690
+          FFMPEG_ZSIZE=1108780
+          FFMPEG_SUM=bea8650f6702773c435d072f9fff673071d295a9a5c512220428de025810156c
           ;;
       esac
       curl -H 'Accept: application/octet-stream' -sLr "$FFMPEG_ZSTART"-"$(expr $FFMPEG_ZSTART + $FFMPEG_ZSIZE)" "$ELECTRON_URL" | \
