@@ -132,7 +132,7 @@ parts:
       rm -f "$CRAFT_PART_INSTALL/opt/vivaldi/libqt5_shim.so" \
             "$CRAFT_PART_INSTALL/opt/vivaldi/libqt6_shim.so"
       # Copy the updated ffmpeg into place
-      cp "$CRAFT_STAGE/libffmpeg.so" "$CRAFT_PART_INSTALL/opt/vivaldi/libffmpeg.so"
+      install -m644 "$CRAFT_STAGE/libffmpeg.so" "$CRAFT_PART_INSTALL/opt/vivaldi"
 
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
 
