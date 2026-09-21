@@ -69,6 +69,10 @@ plugs:
   shmem:
     interface: shared-memory
     private: true
+  chromium-ffmpeg-127365:
+    interface: content
+    target: $SNAP
+    default-provider: chromium-ffmpeg
   gtk-3-themes:
     interface: content
     target: $SNAP/share/themes
@@ -100,7 +104,6 @@ parts:
     plugin: dump
     after:
       - launcher
-      - ffmpeg-alt
     source: https://downloads.vivaldi.com/stable/vivaldi-stable-$SNAPCRAFT_PROJECT_VERSION-$CRAFT_ARCH_BUILD_FOR-binsrc.tar.gz
     source-type: tar
     stage-packages:
@@ -131,40 +134,7 @@ parts:
       # for ui backend.
       rm -f "$CRAFT_PART_INSTALL/opt/vivaldi/libqt5_shim.so" \
             "$CRAFT_PART_INSTALL/opt/vivaldi/libqt6_shim.so"
-      # Copy the alternative ffmpeg (with better codec support) into place
-      install -m644 "$CRAFT_STAGE/libffmpeg.so" "$CRAFT_PART_INSTALL/opt/vivaldi"
-
     parse-info: [usr/share/appdata/vivaldi.appdata.xml]
-
-  # Use a version of libffmpeg.so that supports additional codecs
-  # This needs to be updated when Vivaldi changes major Chromium version
-  ffmpeg-alt:
-    plugin: nil
-    build-packages:
-      - curl
-    override-build: |
-      set -eu
-      # From Electron 44.4.2 (based on Chromium 152.0.7977.130)
-      case "$CRAFT_ARCH_BUILD_FOR" in
-        amd64)
-          ELECTRON_URL=https://api.github.com/repos/electron/electron/releases/assets/571409213
-          FFMPEG_ZSTART=110023773
-          FFMPEG_ZSIZE=1162987
-          FFMPEG_SUM=39f63af3ef6f8db9eea20803c6f6dff8b2d5ad596d506ea1effb3f856715ac1c
-          ;;
-        arm64)
-          ELECTRON_URL=https://api.github.com/repos/electron/electron/releases/assets/571424530
-          FFMPEG_ZSTART=121872048
-          FFMPEG_ZSIZE=1109009
-          FFMPEG_SUM=428895ab360110cb43c320d9fc0cc0b52d3876a6e03ba626655c7297244e2763
-          ;;
-      esac
-      curl -H 'Accept: application/octet-stream' -sLr "$FFMPEG_ZSTART"-"$(expr $FFMPEG_ZSTART + $FFMPEG_ZSIZE)" "$ELECTRON_URL" | \
-        zcat > "$CRAFT_PART_INSTALL/libffmpeg.so"
-      echo "$FFMPEG_SUM  $CRAFT_PART_INSTALL/libffmpeg.so" | sha256sum --quiet -c
-      craftctl default
-    prime:
-      - -libffmpeg.so
 
   # Copied from Chromium's snapcraft.yaml - patches xdg-icon-resource
   # to place the icons in a different location than dictated by XDG_DATA_HOME.
